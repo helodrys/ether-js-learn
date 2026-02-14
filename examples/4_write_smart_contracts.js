@@ -20,10 +20,10 @@ const ERC20_ADDRESS = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" // USDC Contr
 const contract = new ethers.Contract(ERC20_ADDRESS, ERC20_ABI, provider)
 
 // Define reciever
-const RECIEVER = "" // Your account address 2
+const RECIEVER = "0xB11039e1Fb3a2a41c05655D68b980E7F7D8a1407" // Your account address 2
 
 async function main() {
-  const privateKey = await promptForKey()
+  const privateKey = await promptForKey() // main wallet private key
 
   // Setup wallet
   const wallet = new ethers.Wallet(privateKey, provider)
@@ -38,19 +38,20 @@ async function main() {
   console.log(`Reciever balance before: ${recieverBalanceBefore}\n`)
 
   // Setup amount to transfer
-
+const decimals = await contract.decimals()
+const amount = ethers.parseUnits("1",decimals)
   // Create transaction
-
+const transaction = await contract.connect(wallet).transfer(RECIEVER, amount)
   // Wait transaction
-
+await transaction.wait()
   // Log transaction
-
+console.log(transaction)
   // Get ERC20 balances
   const senderBalanceAfter = await contract.balanceOf(wallet.address)
   const recieverBalanceAfter = await contract.balanceOf(RECIEVER)
 
-  console.log(`\nBalance of sender: ${senderBalanceAfter}`)
-  console.log(`Balance of reciever: ${recieverBalanceAfter}\n`)
+  console.log(`\nBalance of sender: ${ethers.formatUnits(senderBalanceAfter, decimals)}\n`)
+  console.log(`Balance of reciever: ${ethers.formatUnits(recieverBalanceAfter, decimals)}\n`)
 }
 
 main()

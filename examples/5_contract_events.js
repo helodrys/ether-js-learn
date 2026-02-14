@@ -12,6 +12,8 @@ const ERC20_ABI = [
   "function totalSupply() view returns (uint256)",
   "function balanceOf(address) view returns (uint256)",
 
+  "event Transfer(address indexed from, address indexed to, uint256 value)"
+
 
 ];
 
